@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Github Api</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form id="userAdd">
+            <div class="form-group">
+                <label>Github Username:</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter Your Github Username">
+            </div>
+        </form>
+        <div id="profile"></div>
+    </div>
+    <script>
+        function getProfile(e) {
+            e.preventDefault();
+            console.log('Fetching...');
+            var username = document.getElementById('username').value;
+            if (!username || username == '') {
+                useranme = alert("Enter the UserName First!!!!!!!!!!!!");
+            }
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (xhttp.readyState == 4 && xhttp.status == 200) {
+                    var user = JSON.parse(xhttp.responseText);
+
+                    document.getElementById('profile').innerHTML = `
+                 <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">${user.name}</h3>
+                            </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                                <img src = "${user.avatar_url}">
+                        </div>
+                        <div class="col-md-9">
+                                <div class="panel-body">
+                                        <span class="label label-info">Public Repos: ${user.public_repos}</span>
+                                        <span class="label label-danger">Location: ${user.location}</span>
+                                        <br><br><br>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                Bio:${user.bio}
+                                </li><br>
+                                <li class="list-group-item">
+                                Login Id:  ${user.login}
+                                </li>
+                                <br><br><br>
+                       <a class="btn btn-default" target="_blank" href="${user.html_url}">Visit Github</a>
+   
+                        </div>
+                    </div>
+                        
+                    </div>
+                 </div>`;
+                }
+            }
+            xhttp.open('GET', 'https://api.github.com/users/' + username, true);
+            xhttp.send();
+        }
+        document.getElementById("userAdd").addEventListener("submit", getProfile, false);
+    </script>
+
+</body>
+
+</html>
